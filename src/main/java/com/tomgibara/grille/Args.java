@@ -6,7 +6,7 @@ import com.beust.jcommander.ParameterException;
 
 public class Args {
 
-	@Parameter(names = { "--help", "-h"}, help = true)
+	@Parameter(names = { "--help", "-h"}, help = true, description = "Display this help")
 	public boolean help;
 
 	@Parameter(names = { "--settings" }, description = "Path to settings file")
