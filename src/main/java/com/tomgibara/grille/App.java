@@ -208,7 +208,6 @@ public class App {
 		return result;
 	}
 	
-	//TODO test for fill
 	private static int score(BitVector grille) {
 		int order = order(grille);
 		int size = order * 2;
@@ -233,8 +232,32 @@ public class App {
 			if (q != exp) score += Math.abs(q - exp);
 		}
 		if ((order & 1) == 1) score --;
-		
+		if (!connected(grille, size)) score += order * 2;
 		return score;
+	}
+	
+	private static boolean connected(BitVector grille, int size) {
+		BitVector visited = grille.mutableCopy();
+		for (int x = 0; x < size; x++) {
+			walk(visited, size, x,        0);
+			walk(visited, size, x, size - 1);
+		}
+		for (int y = 0; y < size; y++) {
+			walk(visited, size, 0       , y);
+			walk(visited, size, size - 1, y);
+		}
+		return visited.isAllOnes();
+	}
+	
+	private static void walk(BitVector visited, int size, int x, int y) {
+		int i = size * y + x;
+		if (visited.getBit(i)) return; // already visited (or a gap)
+		visited.setBit(i, true); // mark our visit
+		// now walk
+		if (x > 0       ) walk(visited, size, x - 1, y    );
+		if (x < size - 1) walk(visited, size, x + 1, y    );
+		if (y > 0       ) walk(visited, size, x    , y - 1);
+		if (y < size - 1) walk(visited, size, x    , y + 1);
 	}
 	
 	private static int order(BitVector grille) {
